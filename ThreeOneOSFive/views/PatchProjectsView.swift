@@ -289,59 +289,54 @@ struct PatchProjectsView: View {
 
     private var patchList: some View {
         List {
-            onlinePatchSection
+            Section {
+                Picker("Select Game", selection: $onlineGame) {
+                    ForEach(OnlinePatchGame.allCases) { game in
+                        Text(game.title).tag(game)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .listRowBackground(Color.clear)
+
+                HStack(alignment: .top, spacing: 10) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(onlinePatch?.version.map { ".\($0)" } ?? "Online Patches")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundStyle(.white)
+                        Text(onlinePatch?.notes ?? onlinePatchMessage ?? "There are no patches yet. Soon, patches will be updated. Please check back later.")
+                            .font(.system(size: 12, weight: .regular))
+                            .foregroundStyle(.white.opacity(0.70))
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    Spacer(minLength: 4)
+                    Button {
+                        Task { await refreshOnlinePatch() }
+                    } label: {
+                        if isRefreshingOnlinePatch {
+                            ProgressView().tint(.white)
+                        } else {
+                            Image(systemName: "arrow.clockwise")
+                                .font(.system(size: 16, weight: .semibold))
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(Color(red: 0.20, green: 0.68, blue: 1.0))
+                    .disabled(isRefreshingOnlinePatch)
+                    .accessibilityLabel("Refresh online patches")
+                }
+                .padding(10)
+                .background(Color.white.opacity(0.055), in: RoundedRectangle(cornerRadius: 12))
+                .listRowBackground(Color.clear)
+            } header: {
+                Text("Online Patches").foregroundStyle(.white)
+            }
+
             localPatchSection
         }
         .scrollContentBackground(.hidden)
         .background(Color.clear)
         .listStyle(.insetGrouped)
         .environment(\.defaultMinListRowHeight, 64)
-    }
-
-    @ViewBuilder
-    private var onlinePatchSection: some View {
-        Section {
-            Picker("Select Game", selection: $onlineGame) {
-                ForEach(OnlinePatchGame.allCases) { game in
-                    Text(game.title).tag(game)
-                }
-            }
-            .pickerStyle(.segmented)
-            .listRowBackground(Color.clear)
-
-            HStack(alignment: .top, spacing: 10) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(onlinePatch?.version.map { ".\($0)" } ?? "Online Patches")
-                        .font(.system(size: 15, weight: .bold))
-                        .foregroundStyle(.white)
-                    Text(onlinePatch?.notes ?? onlinePatchMessage ?? "There are no patches yet. Soon, patches will be updated. Please check back later.")
-                        .font(.system(size: 12, weight: .regular))
-                        .foregroundStyle(.white.opacity(0.70))
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                Spacer(minLength: 4)
-                Button {
-                    Task { await refreshOnlinePatch() }
-                } label: {
-                    if isRefreshingOnlinePatch {
-                        ProgressView().tint(.white)
-                    } else {
-                        Image(systemName: "arrow.clockwise")
-                            .font(.system(size: 16, weight: .semibold))
-                    }
-                }
-                .buttonStyle(.plain)
-                .foregroundStyle(Color(red: 0.20, green: 0.68, blue: 1.0))
-                .disabled(isRefreshingOnlinePatch)
-                .accessibilityLabel("Refresh online patches")
-            }
-            .padding(10)
-            .background(Color.white.opacity(0.055), in: RoundedRectangle(cornerRadius: 12))
-            .listRowBackground(Color.clear)
-        } header: {
-            Text("Online Patches").foregroundStyle(.white)
-        }
-
     }
 
     @ViewBuilder
