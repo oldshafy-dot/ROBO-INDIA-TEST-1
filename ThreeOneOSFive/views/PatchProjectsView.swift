@@ -298,6 +298,7 @@ struct PatchProjectsView: View {
         .environment(\.defaultMinListRowHeight, 64)
     }
 
+    @ViewBuilder
     private var onlinePatchSection: some View {
         Section {
             Picker("Select Game", selection: $onlineGame) {
