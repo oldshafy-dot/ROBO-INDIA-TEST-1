@@ -182,3 +182,5 @@ struct FilesTabSession: Equatable {
         selectedTabID = id
     }
 }
+
+// Build verification baseline.
