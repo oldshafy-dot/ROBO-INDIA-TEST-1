@@ -320,7 +320,7 @@ struct PatchProjectsView: View {
     private var onlinePatchInfoRow: some View {
         HStack(alignment: .top, spacing: 10) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(onlinePatch?.version.map { ".\($0)" } ?? "Online Patches")
+                Text((onlinePatch?.version).map { ".\($0)" } ?? "Online Patches")
                     .font(.system(size: 15, weight: .bold))
                     .foregroundStyle(.white)
                 Text(onlinePatch?.notes ?? onlinePatchMessage ?? "There are no patches yet. Soon, patches will be updated. Please check back later.")
