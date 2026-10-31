@@ -31,7 +31,7 @@ struct ContentView: View {
         } else if arguments.contains("--simulate-search-tab") {
             initialTab = 5
         } else {
-            initialTab = 0
+            initialTab = AppSection.installed.rawValue
         }
         _tabNavigation = State(initialValue: AppTabNavigationState(selectedTab: initialTab))
         _showSettings = State(
@@ -84,7 +84,7 @@ struct ContentView: View {
 
     private var compactLayout: some View {
         TabView(selection: tabSelection) {
-            ForEach([AppSection.home, .installed]) { section in
+            ForEach([AppSection.installed, .home]) { section in
                 sectionContent(section)
                     .background(Color.clear)
                     .tabItem {
@@ -102,7 +102,7 @@ struct ContentView: View {
     private var regularLayout: some View {
         NavigationSplitView {
             List {
-                ForEach([AppSection.home, .installed]) { section in
+                ForEach([AppSection.installed, .home]) { section in
                     Button {
                         withAnimation(.easeInOut(duration: 0.18)) {
                             tabNavigation.select(section.rawValue)
@@ -217,7 +217,7 @@ struct ContentView: View {
         let selected = AppSection(rawValue: tabNavigation.selectedTab)
         return selected.flatMap {
             ([AppSection.home, .installed].contains($0)) ? $0 : nil
-        } ?? .home
+        } ?? .installed
     }
 
     private func openSettings() {
